@@ -12,14 +12,14 @@ func BaseEndPoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "API : /hello")
 }
 func HelloWorldEndPoint(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello World - Go rest api")
+	fmt.Fprintln(w, "pong")
 }
 
 func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/", BaseEndPoint).Methods("GET")
-	r.HandleFunc("/hello", HelloWorldEndPoint).Methods("GET")
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	router := mux.NewRouter()
+	router.HandleFunc("/", BaseEndPoint).Methods("GET")
+	router.HandleFunc("/ping", HelloWorldEndPoint).Methods("GET")
+	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
 	}
 }
