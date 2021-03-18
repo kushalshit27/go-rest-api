@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
-	"encoding/json"
 
-	"github.com/kushalshit27/go-rest-api/post"
 	"github.com/kushalshit27/go-rest-api/internal/middleware"
 	"github.com/kushalshit27/go-rest-api/internal/utils"
+	"github.com/kushalshit27/go-rest-api/post"
 
 	"github.com/gorilla/mux"
 )

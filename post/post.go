@@ -1,9 +1,9 @@
 package post
 
 import (
-	"net/http"
 	"encoding/json"
 	"github.com/kushalshit27/go-rest-api/internal/utils"
+	"net/http"
 )
 
 type postAPI struct{}
