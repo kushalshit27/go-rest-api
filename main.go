@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
-	"flag"
 
 	"github.com/kushalshit27/go-rest-api/internal/config"
 	"github.com/kushalshit27/go-rest-api/internal/database"
@@ -43,7 +43,7 @@ func main() {
 	database := database.NewDB(config)
 	defer database.Close()
 
-	// Init server 
+	// Init server
 	addr := fmt.Sprintf(":%s", "8080")
 	log.Printf("[API] API running on: http://127.0.0.1:%s", "8080")
 

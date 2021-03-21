@@ -29,7 +29,6 @@ type Config struct {
 	GithubCallbackURL string
 }
 
-
 // Load config from .env file
 func Load(path string) *Config {
 	err := godotenv.Load(path)

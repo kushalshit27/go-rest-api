@@ -4,18 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"net/http"
+	"os"
 
-	"github.com/kushalshit27/go-rest-api/internal/utils"
 	"github.com/kushalshit27/go-rest-api/internal/database"
 	"github.com/kushalshit27/go-rest-api/internal/models"
+	"github.com/kushalshit27/go-rest-api/internal/utils"
 )
 
-type postAPI struct{
+type postAPI struct {
 	db *database.DB
 }
-
 
 func newPostAPI(db *database.DB) *postAPI {
 	var postapi *postAPI
@@ -23,19 +22,20 @@ func newPostAPI(db *database.DB) *postAPI {
 	postapi.db = db
 	return postapi
 }
+
 // All all
 func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
-	rows, err:= h.db.Query(ctx, "SELECT * FROM posts ORDER BY id ASC")
+	rows, err := h.db.Query(ctx, "SELECT * FROM posts ORDER BY id ASC")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
 	}
 	defer rows.Close()
-	
+
 	var results []models.Post
 	for rows.Next() {
 		var r models.Post
-		err = rows.Scan(&r.ID, &r.Title, &r.Description,  &r.Created)
+		err = rows.Scan(&r.ID, &r.Title, &r.Description, &r.Created)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Unable to scan %v\n", err)
 			os.Exit(1)

@@ -1,9 +1,9 @@
 package post
 
 import (
+	"github.com/kushalshit27/go-rest-api/internal/database"
 	"github.com/kushalshit27/go-rest-api/internal/middleware"
 	"github.com/kushalshit27/go-rest-api/internal/utils"
-	"github.com/kushalshit27/go-rest-api/internal/database"
 
 	"github.com/gorilla/mux"
 )
