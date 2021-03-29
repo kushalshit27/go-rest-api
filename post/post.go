@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/kushalshit27/go-rest-api/internal/database"
 	"github.com/kushalshit27/go-rest-api/internal/models"
@@ -16,6 +17,10 @@ type postAPI struct {
 	db *database.DB
 }
 
+var (
+	ctx = context.Background()
+)
+
 func newPostAPI(db *database.DB) *postAPI {
 	var postapi *postAPI
 	postapi = new(postAPI)
@@ -25,8 +30,7 @@ func newPostAPI(db *database.DB) *postAPI {
 
 // All all
 func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-	rows, err := h.db.Query(ctx, "SELECT * FROM posts ORDER BY id ASC")
+	rows, err := h.db.Query(ctx, "SELECT * FROM posts ORDER BY id DESC")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
 	}
@@ -35,7 +39,7 @@ func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 	var results []models.Post
 	for rows.Next() {
 		var r models.Post
-		err = rows.Scan(&r.ID, &r.Title, &r.Description, &r.Created)
+		err = rows.Scan(&r.ID, &r.Title, &r.Description, &r.Created, &r.Status)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Unable to scan %v\n", err)
 			os.Exit(1)
@@ -53,6 +57,22 @@ func (h *postAPI) Get(w http.ResponseWriter, r *http.Request) {
 
 // Store store
 func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
+	var p models.Post
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	p.Created = time.Now()
+
+	sqlStatement := `INSERT INTO posts(title, description, created_on) VALUES ($1, $2, $3) RETURNING id`
+	id := 0
+	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&id)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("New record ID is:", id)
 	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "TODO"))
 }
 
