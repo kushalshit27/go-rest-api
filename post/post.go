@@ -87,7 +87,8 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 	id := 0
 	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&id)
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	fmt.Println("New record ID is:", id)
@@ -96,7 +97,24 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 
 // Update update
 func (h *postAPI) Update(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "TODO"))
+	paramId := mux.Vars(r)["id"]
+	paramIdInt, err := strconv.Atoi(paramId)
+	if err != nil {
+		fmt.Println(err)
+	}
+	var post models.Post
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	sqlStatement := `UPDATE posts SET title=$1, description=$2, status=$3 WHERE id =$4 RETURNING id,created_on`
+	err = h.db.QueryRow(ctx, sqlStatement, post.Title, post.Description, post.Status, paramIdInt).Scan(&post.ID, &post.Created)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(utils.ResponseSuccess("", post))
 }
 
 // Remove remove
