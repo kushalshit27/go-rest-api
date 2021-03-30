@@ -59,13 +59,18 @@ func (h *postAPI) Get(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	post := models.Post{}
+	var post models.Post
 	query := `SELECT id,title,description,created_on, status FROM posts WHERE id =$1`
 	err = h.db.QueryRow(ctx, query, paramIdInt).Scan(&post.ID, &post.Title, &post.Description, &post.Created, &post.Status)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
 	}
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", post))
+	if post.ID == 0 {
+		json.NewEncoder(w).Encode(utils.ResponseError("Not found"))
+	} else {
+		json.NewEncoder(w).Encode(utils.ResponseSuccess("", post))
+	}
+
 }
 
 // Store store
