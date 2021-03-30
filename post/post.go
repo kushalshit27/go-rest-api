@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/kushalshit27/go-rest-api/internal/database"
 	"github.com/kushalshit27/go-rest-api/internal/models"
 	"github.com/kushalshit27/go-rest-api/internal/utils"
@@ -52,7 +54,18 @@ func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 
 // Get get
 func (h *postAPI) Get(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "TODO"))
+	paramId := mux.Vars(r)["id"]
+	paramIdInt, err := strconv.Atoi(paramId)
+	if err != nil {
+		fmt.Println(err)
+	}
+	post := models.Post{}
+	query := `SELECT id,title,description,created_on, status FROM posts WHERE id =$1`
+	err = h.db.QueryRow(ctx, query, paramIdInt).Scan(&post.ID, &post.Title, &post.Description, &post.Created, &post.Status)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
+	}
+	json.NewEncoder(w).Encode(utils.ResponseSuccess("", post))
 }
 
 // Store store
