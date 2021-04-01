@@ -3,9 +3,8 @@ package post
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
@@ -34,7 +33,7 @@ func newPostAPI(db *database.DB) *postAPI {
 func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.db.Query(ctx, "SELECT * FROM posts ORDER BY id DESC")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
+		log.Println(err)
 	}
 	defer rows.Close()
 
@@ -43,8 +42,8 @@ func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 		var r models.Post
 		err = rows.Scan(&r.ID, &r.Title, &r.Description, &r.Created, &r.Status)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Unable to scan %v\n", err)
-			os.Exit(1)
+			log.Println(err)
+			return
 		}
 		results = append(results, r)
 	}
@@ -57,13 +56,15 @@ func (h *postAPI) Get(w http.ResponseWriter, r *http.Request) {
 	paramId := mux.Vars(r)["id"]
 	paramIdInt, err := strconv.Atoi(paramId)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		return
 	}
 	var post models.Post
 	query := `SELECT id,title,description,created_on, status FROM posts WHERE id =$1`
 	err = h.db.QueryRow(ctx, query, paramIdInt).Scan(&post.ID, &post.Title, &post.Description, &post.Created, &post.Status)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
+		log.Println(err)
+		return
 	}
 	if post.ID == 0 {
 		json.NewEncoder(w).Encode(utils.ResponseError("Not found"))
@@ -78,7 +79,7 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 	var p models.Post
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 	p.Created = time.Now()
@@ -87,12 +88,12 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 	id := 0
 	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 
-	fmt.Println("New record ID is:", id)
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "TODO"))
+	log.Println("New record ID is:", id)
+	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "Created"))
 }
 
 // Update update
@@ -100,18 +101,18 @@ func (h *postAPI) Update(w http.ResponseWriter, r *http.Request) {
 	paramId := mux.Vars(r)["id"]
 	paramIdInt, err := strconv.Atoi(paramId)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	var post models.Post
 	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 	sqlStatement := `UPDATE posts SET title=$1, description=$2, status=$3 WHERE id =$4 RETURNING id,created_on`
 	err = h.db.QueryRow(ctx, sqlStatement, post.Title, post.Description, post.Status, paramIdInt).Scan(&post.ID, &post.Created)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 	json.NewEncoder(w).Encode(utils.ResponseSuccess("", post))
