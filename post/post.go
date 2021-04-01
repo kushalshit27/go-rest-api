@@ -120,5 +120,19 @@ func (h *postAPI) Update(w http.ResponseWriter, r *http.Request) {
 
 // Remove remove
 func (h *postAPI) Remove(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "TODO"))
+	paramId := mux.Vars(r)["id"]
+	paramIdInt, err := strconv.Atoi(paramId)
+	if err != nil {
+		log.Println(err)
+	}
+	deletedId := 0
+	sqlStatement := `DELETE FROM posts WHERE id =$1 RETURNING id`
+	err = h.db.QueryRow(ctx, sqlStatement, paramIdInt).Scan(&deletedId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	data := make(map[string]int)
+	data["deleted_id"] = deletedId
+	json.NewEncoder(w).Encode(utils.ResponseSuccess("", data))
 }
