@@ -85,15 +85,16 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 	p.Created = time.Now()
 
 	sqlStatement := `INSERT INTO posts(title, description, created_on) VALUES ($1, $2, $3) RETURNING id`
-	id := 0
-	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&id)
+	createdId := 0
+	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&createdId)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	log.Println("New record ID is:", id)
-	json.NewEncoder(w).Encode(utils.ResponseSuccess("", "Created"))
+	data := make(map[string]int)
+	data["created_id"] = createdId
+	json.NewEncoder(w).Encode(utils.ResponseSuccess("", data))
 }
 
 // Update update
