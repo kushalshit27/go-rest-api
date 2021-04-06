@@ -1,7 +1,12 @@
+<p align="center">
+  <img width="128" height="128" src="https://github.com/kushalshit27/go-rest-api/blob/master/readme-icon.png">
+</p>
+
+<!-- GETTING STARTED -->
 # REST API with Golang
 A RESTful API example for simple manage post application with Go
 
-<!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
