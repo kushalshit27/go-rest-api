@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="128" height="128" src="https://github.com/kushalshit27/go-rest-api/blob/master/readme-icon.png">
+  <img width="250" height="200" src="https://github.com/kushalshit27/go-rest-api/blob/master/readme-icon.png">
 </p>
 
 <!-- GETTING STARTED -->
