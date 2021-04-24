@@ -31,7 +31,24 @@ func newPostAPI(db *database.DB) *postAPI {
 
 // All all
 func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.Query(ctx, "SELECT * FROM posts ORDER BY id DESC")
+	queryString := `SELECT 
+						b.id,
+						b.title,
+						b.description,
+						b.created_at, 
+						b.status,
+						u.name,
+						u.email,
+						u.role,
+						u.created_at
+					FROM 
+						blogs as b 
+					JOIN 
+						users as u 
+					ON 
+					b.created_by = u.id;`
+
+	rows, err := h.db.Query(ctx, queryString)
 	if err != nil {
 		log.Println(err)
 	}
@@ -39,13 +56,13 @@ func (h *postAPI) All(w http.ResponseWriter, r *http.Request) {
 
 	var results []models.Post
 	for rows.Next() {
-		var r models.Post
-		err = rows.Scan(&r.ID, &r.Title, &r.Description, &r.Created, &r.Status)
+		var p models.Post
+		err = rows.Scan(&p.ID, &p.Title, &p.Description, &p.Created, &p.Status, &p.User.Name, &p.User.Email, &p.User.Role, &p.User.CreatedAt)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		results = append(results, r)
+		results = append(results, p)
 	}
 
 	json.NewEncoder(w).Encode(utils.ResponseSuccess("", results))
@@ -60,7 +77,7 @@ func (h *postAPI) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var post models.Post
-	query := `SELECT id,title,description,created_on, status FROM posts WHERE id =$1`
+	query := `SELECT id,title,description,created_at, status FROM blogs WHERE id =$1`
 	err = h.db.QueryRow(ctx, query, paramIdInt).Scan(&post.ID, &post.Title, &post.Description, &post.Created, &post.Status)
 	if err != nil {
 		log.Println(err)
