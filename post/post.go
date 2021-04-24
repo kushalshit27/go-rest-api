@@ -23,8 +23,7 @@ var (
 )
 
 func newPostAPI(db *database.DB) *postAPI {
-	var postapi *postAPI
-	postapi = new(postAPI)
+	postapi := new(postAPI)
 	postapi.db = db
 	return postapi
 }
@@ -101,7 +100,7 @@ func (h *postAPI) Store(w http.ResponseWriter, r *http.Request) {
 	}
 	p.Created = time.Now()
 
-	sqlStatement := `INSERT INTO posts(title, description, created_on) VALUES ($1, $2, $3) RETURNING id`
+	sqlStatement := `INSERT INTO blogs(title, description, created_on) VALUES ($1, $2, $3) RETURNING id`
 	createdId := 0
 	err = h.db.QueryRow(ctx, sqlStatement, p.Title, p.Description, p.Created).Scan(&createdId)
 	if err != nil {
@@ -127,7 +126,7 @@ func (h *postAPI) Update(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	sqlStatement := `UPDATE posts SET title=$1, description=$2, status=$3 WHERE id =$4 RETURNING id,created_on`
+	sqlStatement := `UPDATE blogs SET title=$1, description=$2, status=$3 WHERE id =$4 RETURNING id,created_on`
 	err = h.db.QueryRow(ctx, sqlStatement, post.Title, post.Description, post.Status, paramIdInt).Scan(&post.ID, &post.Created)
 	if err != nil {
 		log.Println(err)
@@ -144,7 +143,7 @@ func (h *postAPI) Remove(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	deletedId := 0
-	sqlStatement := `DELETE FROM posts WHERE id =$1 RETURNING id`
+	sqlStatement := `DELETE FROM blogs WHERE id =$1 RETURNING id`
 	err = h.db.QueryRow(ctx, sqlStatement, paramIdInt).Scan(&deletedId)
 	if err != nil {
 		log.Println(err)
