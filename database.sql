@@ -23,8 +23,8 @@ CREATE TABLE public.passwords
 
 CREATE TABLE public.users
 (
-    name character(255) NOT NULL,
-    email character(255) NOT NULL,
+    name varying(255) NOT NULL,
+    email varying(255) NOT NULL,
     age integer NOT NULL,
     role character varying NOT NULL,
     created_at timestamp(0) without time zone NOT NULL,
