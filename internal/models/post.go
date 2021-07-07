@@ -10,6 +10,8 @@ type Post struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Created     time.Time `json:"created"`
+	CreatedBy   int64     `json:"created_by"`
+	Updated     time.Time `json:"updated"`
 	Status      bool      `json:"status"`
 	User        Users     `json:"user"`
 }

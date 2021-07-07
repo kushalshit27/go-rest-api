@@ -10,28 +10,30 @@ import (
 
 // Service service
 type Service struct {
-	post *postAPI
+	db *database.DB
 }
 
 // UserAPI
 func PostAPI(db *database.DB) *Service {
-	return &Service{
-		post: newPostAPI(db),
-	}
+	return &Service{db}
 }
 
 // Register Register
 func (s *Service) Register(router *mux.Router) {
 	router.Use(middleware.Logger)
 
+	var postRepository PostRepository = NewPostRepository(s.db)
+	var postService PostService = NewPostService(postRepository)
+	var postController PostController = NewPostController(postService)
+
 	routes := utils.Routes{
 
 		// Post
-		utils.AddRoute("/posts", "GET", s.post.All),
-		utils.AddRoute("/posts", "POST", s.post.Store),
-		utils.AddRoute("/posts/{id}", "GET", s.post.Get),
-		utils.AddRoute("/posts/{id}", "PUT", s.post.Update),
-		utils.AddRoute("/posts/{id}", "DELETE", s.post.Remove),
+		utils.AddRoute("/posts", "GET", postController.All),
+		utils.AddRoute("/posts", "POST", postController.Store),
+		utils.AddRoute("/posts/{id}", "GET", postController.Get),
+		utils.AddRoute("/posts/{id}", "PUT", postController.Update),
+		utils.AddRoute("/posts/{id}", "DELETE", postController.Remove),
 	}
 
 	for _, r := range routes {
