@@ -2,7 +2,6 @@ package post
 
 import (
 	"github.com/kushalshit27/go-rest-api/internal/database"
-	"github.com/kushalshit27/go-rest-api/internal/middleware"
 	"github.com/kushalshit27/go-rest-api/internal/utils"
 
 	"github.com/gorilla/mux"
@@ -20,7 +19,6 @@ func PostAPI(db *database.DB) *Service {
 
 // Register Register
 func (s *Service) Register(router *mux.Router) {
-	router.Use(middleware.Logger)
 
 	var postRepository PostRepository = NewPostRepository(s.db)
 	var postService PostService = NewPostService(postRepository)

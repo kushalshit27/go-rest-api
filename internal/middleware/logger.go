@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Logger wraps an HTTP handler and logs the request as necessary.
@@ -13,6 +14,12 @@ func Logger(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 
-		log.Printf("(%s) \"%s %s %s\" %s", r.RemoteAddr, r.Method, r.RequestURI, r.Proto, time.Since(start))
+		//log.Printf("(%s) \"%s %s %s\" %s", r.RemoteAddr, r.Method, r.RequestURI, r.Proto, time.Since(start))
+		log.WithFields(log.Fields{
+			"method":     r.Method,
+			"path":       r.RequestURI,
+			"proto":      r.Proto,
+			"latency_ms": time.Since(start).Milliseconds(),
+		}).Info("request details")
 	})
 }
