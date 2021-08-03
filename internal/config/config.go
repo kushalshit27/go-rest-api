@@ -10,23 +10,15 @@ import (
 
 // Config ...
 type Config struct {
-	Port              string
-	OauthRedirectURL  string
-	DBURL             string
-	DBName            string
-	DBUser            string
-	DBPassword        string
-	DBPort            int
-	APIPrefix         string
-	DeviceSaveRoute   string
-	DeviceTagRoute    string
-	DeviceToken       string
-	DeviceSport       string
-	IsProduction      bool
-	GithubID          string
-	GithubSecret      string
-	GithubState       string
-	GithubCallbackURL string
+	Port             string
+	OauthRedirectURL string
+	DBURL            string
+	DBName           string
+	DBUser           string
+	DBPassword       string
+	DBPort           int
+	APIPrefix        string
+	IsProduction     bool
 }
 
 // Load config from .env file
@@ -67,15 +59,6 @@ func Load(path string) *Config {
 	c.DBUser = os.Getenv("RS_DB_USER")
 	c.DBPassword = os.Getenv("RS_DB_PASSWORD")
 	c.APIPrefix = os.Getenv("RS_API_PREFIX")
-	c.DeviceTagRoute = os.Getenv("RS_DEVICE_TAG_ROUTE")
-	c.DeviceSaveRoute = os.Getenv("RS_DEVICE_SAVE_ROUTE")
-	c.APIPrefix = os.Getenv("RS_API_PREFIX")
-	c.DeviceToken = os.Getenv("RS_DEVICE_TOKEN")
-	c.DeviceSport = os.Getenv("RS_DEVICE_SPORT")
-	c.GithubID = os.Getenv("RS_GITHUB_CLIENT_ID")
-	c.GithubSecret = os.Getenv("RS_GITHUB_SECRET")
-	c.GithubState = os.Getenv("RS_GITHUB_STATE")
-	c.GithubCallbackURL = os.Getenv("RS_GITHUB_CALLBACK_URL")
 
 	return &c
 }
