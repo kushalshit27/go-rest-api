@@ -19,6 +19,7 @@ import (
 
 func routes(db *database.DB) *mux.Router {
 	router := mux.NewRouter()
+	router.Use(middleware.Logger)
 
 	postService := post.PostAPI(db)
 
