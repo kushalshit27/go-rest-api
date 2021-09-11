@@ -2,9 +2,10 @@
   <img width="250" height="200" src="readme-icon.png">
 </p>
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/kushalshit27/go-rest-api)](https://goreportcard.com/report/github.com/kushalshit27/go-rest-api)
 <!-- GETTING STARTED -->
 # REST API with Golang
-A RESTful API example for simple manage post application with Go
+A RESTful API example for simple post manage application with Go
 
 
 ## Getting Started
