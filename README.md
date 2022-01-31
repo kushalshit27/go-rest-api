@@ -4,7 +4,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kushalshit27/go-rest-api)](https://goreportcard.com/report/github.com/kushalshit27/go-rest-api)
 <!-- GETTING STARTED -->
-# REST API with Golang
+# REST API with Golang :technologist:
 A RESTful API example for simple post manage application with Go
 
 
