@@ -101,5 +101,5 @@ func Test_Validate_Empty_Post_Title(t *testing.T) {
 	err := testService.Validate(&post)
 
 	assert.NotNil(t, err)
-	assert.Equal(t, "the post is empty", err.Error())
+	assert.Equal(t, "the post title is empty", err.Error())
 }
