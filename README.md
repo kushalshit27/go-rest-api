@@ -4,8 +4,8 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kushalshit27/go-rest-api)](https://goreportcard.com/report/github.com/kushalshit27/go-rest-api)
 
-[![Actions Status](https://github.com/kushalshit27/go-rest-api/workflows/build/badge.svg)](https://github.com/kushalshit27/go-rest-api/actions)
-[![codecov](https://codecov.io/gh/kushalshit27/go-rest-api/branch/master/graph/badge.svg)](https://codecov.io/gh/kushalshit27/go-rest-api)
+<!-- [![Actions Status](https://github.com/kushalshit27/go-rest-api/workflows/build/badge.svg)](https://github.com/kushalshit27/go-rest-api/actions)
+[![codecov](https://codecov.io/gh/kushalshit27/go-rest-api/branch/master/graph/badge.svg)](https://codecov.io/gh/kushalshit27/go-rest-api) -->
 
 <!-- GETTING STARTED -->
 # REST API with Golang
