@@ -89,7 +89,7 @@ func Test_Validate_Empty_Post(t *testing.T) {
 	err := testService.Validate(nil)
 
 	assert.NotNil(t, err)
-	assert.Equal(t, "The post is empty", err.Error())
+	assert.Equal(t, "the post is empty", err.Error())
 
 }
 
